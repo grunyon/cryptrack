@@ -18,7 +18,7 @@ $sql = new mysqli ($MYSQL_HOST, $MYSQL_USER, $MYSQL_PASS, $MYSQL_DB);
 <th>On Order</th>
 <th>Total</th>
 <th>Value (USD)</th>
-<th>&nbsp;</th>
+<th>Market</th>
 </tr>
 <?php
 $total_usd = 0.0;
@@ -61,11 +61,13 @@ while ($balance = $res->fetch_assoc()) {
             echo $sql->error;
             $bdata = $bres->fetch_array();
             $mdiff = $bpi - $bdata["last"];
+            $pdiff = $mdiff / $bdata["last"] * 100;
             if ($mdiff >= 0) {
-                printf ("<img src=\"images/up_arrow.png\" height=\"15\">");
+                printf ("<img src=\"images/up_arrow.png\" height=\"15\">+");
             } else {
-                printf ("<img src=\"images/down_arrow.png\" height=\"15\">");
+                printf ("<img src=\"images/down_arrow.png\" height=\"15\">-");
             }
+            printf ("%4.2f%%", $pdiff);
         } else {
             /* If this is a market account, then check the value on this market, 
                otherwise, just get the averge for it from all markets */
@@ -80,35 +82,47 @@ while ($balance = $res->fetch_assoc()) {
             if ($aaccount["type"] == "Exchange") {
                 /* We have an exchange account, so we should use it for our value */
                 $qry = "SELECT last FROM market_data WHERE ".
-                    "(exchange='".$acct["type"]."' AND timestamp>=".$day.") ".
-                    "ORDER BY timestamp ASC LIMIT 1";
+                    "(exchange='".$acct["type"]."' AND timestamp>=".$day.
+                    " AND market_name='BTC_".$balance["currency"]."') ".
+                    "ORDER BY timestamp DESC LIMIT 1";
                 $fres = $sql->query ($qry);
                 $first = $fres->fetch_array();
                 $qry = "SELECT last FROM market_data WHERE ".
-                    "(exchange='".$acct["type"]."' AND timestamp>=".$day.") ".
-                    "ORDER BY timestamp DESC LIMIT 1";
-                $last = $sql->query ($qry);
-                $last = $fres->fetch_array();
-                echo $last["last"];
-            }
-            if ($aaccount["type"] == "Pool") {
-                /* We have an exchange account, so we should use it for our value */
-                $qry = "SELECT AVG(last) as last FROM market_data WHERE ".
-                    "(timestamp>=".$day.") ".
-                    "GROUP BY timestamp ORDER BY timestamp ASC LIMIT 1";
-                $fres = $sql->query ($qry);
-                $first = $fres->fetch_array();
-                $qry = "SELECT AVG(last) as last FROM market_data WHERE ".
-                    "(timestamp>=".$day.") ".
-                    "GROUP BY timestamp ORDER BY timestamp DESC LIMIT 1";
+                    "(exchange='".$acct["type"]."' AND timestamp>=".$day.
+                    " AND market_name='BTC_".$balance["currency"]."') ".
+                    "ORDER BY timestamp ASC LIMIT 1";
                 $lres = $sql->query ($qry);
                 $last = $lres->fetch_array();
                 $mdiff = $first["last"] - $last["last"];
+                $pdiff = $mdiff / $last["last"] * 100;
                 if ($mdiff >= 0) {
-                    printf ("<img src=\"images/up_arrow.png\" height=\"15\">");
+                    printf ("<img src=\"images/up_arrow.png\" height=\"15\">+");
                 } else {
-                    printf ("<img src=\"images/down_arrow.png\" height=\"15\">");
+                    printf ("<img src=\"images/down_arrow.png\" height=\"15\">-");
                 }
+                printf ("%4.2f%%", $pdiff);
+             }
+            if ($aaccount["type"] == "Pool") {
+                /* We have an exchange account, so we should use it for our value */
+                $qry = "SELECT AVG(last) as last FROM market_data WHERE ".
+                    "(timestamp>=".$day." AND market_name='BTC_".$balance["currency"]."') ".
+                    "GROUP BY timestamp ORDER BY timestamp DESC LIMIT 1";
+                $fres = $sql->query ($qry);
+                echo $sql->error;
+                $first = $fres->fetch_array();
+                $qry = "SELECT AVG(last) as last FROM market_data WHERE ".
+                    "(timestamp>=".$day." AND market_name='BTC_".$balance["currency"]."') ".
+                    "GROUP BY timestamp ORDER BY timestamp ASC LIMIT 1";
+                $lres = $sql->query ($qry);
+                $last = $lres->fetch_array();
+                $mdiff = $first["last"] - $last["last"];
+                $pdiff = $mdiff / $last["last"] * 100;
+                if ($mdiff >= 0) {
+                    printf ("<img src=\"images/up_arrow.png\" height=\"15\">+");
+                } else {
+                    printf ("<img src=\"images/down_arrow.png\" height=\"15\">-");
+                }
+                printf ("%4.2f%%", $pdiff);
             }
             /* Found our account information and class, so load it */
             $cmd = "require_once(__DIR__.\"/".$aaccount["file"]."\");";
