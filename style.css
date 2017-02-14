@@ -1,0 +1,203 @@
+body {
+    background-color: #98afc7;
+    font-family: Helvetica;
+}
+
+h2 {
+    font-size: 16pt;
+    font-weight: bold;
+    color: #0000ff;
+}
+
+div.title {
+    font-size: 16pt;
+    font-weight: bold;
+    color: #0000ff;
+    text-align: center;
+    background-color: #ffffff;
+    border: 2px solid black;
+    border-radius: 5px;
+}
+
+div.growth {
+    font-size: 12pt;
+    background-color: #ffffff;
+    border: 2px solid black;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+div.setup {
+    background-color: #ffffff;
+    border: 1px solid black;
+    border-radius: 5px;
+    width: 50%;
+    padding: 10px;
+    margin: auto;
+    height: 80%;
+    position: relative;
+}
+
+div.setup input[type=submit],div.setup input[type=button] {
+    position: absolute;
+    right: 10;
+    bottom: 10;
+    font-weight: bold;
+}
+
+input[type=button].topright {
+    font-weight: bold;
+    position: absolute;
+    right: 10;
+    top: 10;
+}
+
+div.setup span.header {
+    text-align: center;
+    width: 100%;
+    display: block;
+    font-weight: bold;
+    font-size: 14pt;
+}
+
+div.setup table {
+    border: 0px solid black;
+    margin: 0 auto;
+}
+
+div.setup table tr td {
+    border: 0px solid black;
+}
+
+div.rbordered {
+    background-color: #ffffff;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 0 auto;
+//    display: inline-block;
+    position: relative;
+}
+
+span.title {
+    font-weight: bold;
+    text-align: center;
+    color: #0000ff;
+    display: block;
+}
+
+table.bordered {
+    border: 1px solid black;
+    background-color: #ffffff;
+    border-collapse: collapse;
+}
+
+table.bordered th {
+    font-size: 11pt;
+    font-weight: bold;
+    text-align: center;
+    border: 1px solid black;
+    padding: 2px 8px;
+}
+
+table.bordered th.poolhead {
+    font-size: 11pt;
+    font-weight: bold;
+    text-align: left;
+    column-span: all;
+    color: blue;
+    padding: 5px;
+}
+
+
+table.bordered tr td {
+    font-size: 10pt;
+    border: 1px solid black;
+    padding: 2px 8px;
+}
+
+table.normal {
+    border: 0px solid white;
+    background-color: 98afc7;
+}
+
+table.normal tr td {
+    border: 0px solid white;
+}
+
+div.cgraph {
+    width: 100%;
+    height: 600px;
+    border: 1px solid black;
+}
+
+div.ggraph {
+    width: 600px;
+    height: 300px;
+}
+
+div.graph {
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 5px;
+    background-color: #ffffff;
+}
+
+   
+.positive {
+    color: green;
+}
+
+.negative {
+    color: red;
+}
+
+.bpositive {
+    color: green;
+    font-weight: bold;
+}
+
+.bnegative {
+    color: red;
+    font-weight: bold;
+}
+
+span.note {
+    font-size: 9pt;
+    background-color: lightyellow;
+    border: 1px solid black;
+    display: block;    
+}
+
+div.balance {
+    font-weight: bold;
+    background-color: white;
+    border: 1px solid black;
+    padding: 5px;
+}
+
+th.mining {
+    font-size: 11pt;
+    font-weight: bold;
+    text-align: left;
+    column-span: all;
+    color: green;
+    padding: 5px;
+}
+
+th.income {
+    font-size: 11pt;
+    font-weight: bold;
+    text-align: right;
+    padding: 5px;
+}
+
+a {
+    color: darkcyan;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover {
+    text-decoration: underline;
+}
