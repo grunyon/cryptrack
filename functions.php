@@ -36,7 +36,7 @@ function get_usd_amount ($sql, $currency, $amount, $bpi = 0.0) {
     } else if (!strcmp($currency,"BTC")) {
         $value = $amount * $bpi;
     } else {
-        /* We need to grab market amount for this currency in BTC */
+        /* We need to grab market amount for this currency in BTC */        
         $res = $sql->query ("SELECT last FROM market_data WHERE (".
                             "market_name='BTC_".$currency."') ORDER BY ".
                             "timestamp DESC LIMIT 1");
