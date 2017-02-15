@@ -28,6 +28,8 @@ if (!$res) {
         "low_24_hr FLOAT NOT NULL,".
         "PRIMARY KEY (exchange,market_name,timestamp)) ENGINE = InnoDb;";
     $sql->query($qry);
+    $sqy = "ALTER TABLE `market_data` ADD INDEX( `market_name`, `timestamp`, `last`);";
+    $sql->query($qry);
     printf ("done\n");    
 }
 /* See if we have a balances table */
