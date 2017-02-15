@@ -65,7 +65,7 @@ while ($balance = $res->fetch_assoc()) {
             if ($mdiff >= 0) {
                 printf ("<img src=\"images/up_arrow.png\" height=\"15\">+");
             } else {
-                printf ("<img src=\"images/down_arrow.png\" height=\"15\">-");
+                printf ("<img src=\"images/down_arrow.png\" height=\"15\">");
             }
             printf ("%4.2f%%", $pdiff);
         } else {
@@ -98,7 +98,7 @@ while ($balance = $res->fetch_assoc()) {
                 if ($mdiff >= 0) {
                     printf ("<img src=\"images/up_arrow.png\" height=\"15\">+");
                 } else {
-                    printf ("<img src=\"images/down_arrow.png\" height=\"15\">-");
+                    printf ("<img src=\"images/down_arrow.png\" height=\"15\">");
                 }
                 printf ("%4.2f%%", $pdiff);
              }
@@ -120,7 +120,7 @@ while ($balance = $res->fetch_assoc()) {
                 if ($mdiff >= 0) {
                     printf ("<img src=\"images/up_arrow.png\" height=\"15\">+");
                 } else {
-                    printf ("<img src=\"images/down_arrow.png\" height=\"15\">-");
+                    printf ("<img src=\"images/down_arrow.png\" height=\"15\">");
                 }
                 printf ("%4.2f%%", $pdiff);
             }
