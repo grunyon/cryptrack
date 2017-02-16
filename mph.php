@@ -86,7 +86,7 @@ class mph {
         $retval = array ();
         while ($data = $res->fetch_assoc()) {
             switch ($data["type"]) {
-            case "Debit_MP":
+//            case "Debit_MP":
 //            case "Debit_AE":
             case "Fee":
                 @$retval[$data["currency"]] -= $data["amount"];
