@@ -53,12 +53,18 @@ while ($balance = $res->fetch_assoc()) {
         printf ("<td>");
         /* Check to see if the value for this currency has gone up or down in the last
            24 hours */
+        $avg_time = (60 * 15); // 15 Minutes for the average time
         if ($balance["currency"] == "BTC") {
             /* We are working with the BPI from 24 hours ago */
-            $bres = $sql->query ("SELECT last FROM market_data WHERE ".
+            $bres = $sql->query ("SELECT timestamp FROM market_data WHERE ".
                                  "(exchange='BPI' AND timestamp>=".$day.") ".
                                  "ORDER BY timestamp ASC LIMIT 1");
-            echo $sql->error;
+            $tstart = $bres->fetch_array()[0];
+            $tend = $tstart + $avg_time;
+            $bres = $sql->query ("SELECT AVG(last) as last FROM market_data WHERE ".
+                                 "(exchange='BPI' AND timestamp>=".$tstart.
+                                 " AND timestamp<=".$tend.") ".
+                                 "ORDER BY timestamp ASC LIMIT 1");            
             $bdata = $bres->fetch_array();
             $mdiff = $bpi - $bdata["last"];
             $pdiff = $mdiff / $bdata["last"] * 100;
