@@ -65,6 +65,16 @@ if ($lasttime) {
         $total_cost += $cost_per_day;
     }
 }
+printf ("<tr>\r\n");
+printf ("<td colspan=\"%d\"><b>Total Cost Per Day</b></td>\r\n", $numcols - 1);
+printf ("<td align=\"right\"><b>");
+if ($total_cost < 0) {
+    printf ("<span class=\"positive\">+");
+} else {
+    printf ("<span class=\"negative\">-");
+}
+printf ("\$%4.2f</span></b></td>\r\n", abs($total_cost));
+printf ("</tr>\r\n");
 /* Check to see if we have any active miners from our accounts to add for positive income */
 $res = $sql->query ("SELECT * FROM accounts");
 $miners = array ();
@@ -138,10 +148,20 @@ if (count($mining)>0) {
     }
 }
 printf ("<tr>\r\n");
+printf ("<td colspan=\"%d\"><b>Total Income Per Day</b></td>\r\n", $numcols - 1);
+printf ("<td align=\"right\"><b>");
+if ($total_income_per_day > 0) {
+    printf ("<span class=\"positive\">+");
+} else {
+    printf ("<span class=\"negative\">-");
+}
+printf ("\$%4.2f</span></b></td>\r\n", abs($total_income_per_day));
+printf ("</tr>\r\n");
+printf ("<tr>\r\n");
 printf ("<td colspan=\"%d\">&nbsp;</td>\r\n", $numcols);
 printf ("</tr>\r\n");
 printf ("<tr>\r\n");
-printf ("<th class=\"poolhead\" colspan=\"%d\">Estimated Daily Income</td>\r\n", $numcols - 1);
+printf ("<th class=\"poolhead\" colspan=\"%d\">Estimated Daily Profit</td>\r\n", $numcols - 1);
 printf ("<td align=\"right\"><b><big>");
 $daily_income = $total_income_per_day - $total_cost;
 if ($daily_income >= 0) {
