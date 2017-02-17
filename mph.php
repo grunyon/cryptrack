@@ -6,7 +6,8 @@ class mph {
     protected $user_id;
     /* The URLs we are currently supporting */
     private $urls = array ("BTC" => "bitcoin", "ZEC" => "zcash",
-                         "FTC"=>"feathercoin", "XZC" => "zcoin");
+    "FTC"=>"feathercoin", "XZC" => "zcoin",
+    "XMR"=>"monero");
 
     public function __construct($api_key, $user_id, $note = '') {
         $this->api_key = $api_key;
