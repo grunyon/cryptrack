@@ -28,11 +28,16 @@ class zpool {
         $opts = array('http' =>
             array(
                 'method' => 'GET',
-                'timeout' => 10
+                'timeout' => 50
             )
         );
         $context = stream_context_create($opts);
         $feed = file_get_contents($URL, false, $context);
+        if (!$feed) {
+            echo "\nErroring getting file contents: $URL\n";
+            sleep (1);
+            return $this->retrieveJSON($URL);
+        }
         $json =json_decode($feed, true);
         return $json;
     }
@@ -40,6 +45,7 @@ class zpool {
     public function get_wallet_info () {
         $url = $this->wallet_url."?address=".$this->wallet_address;
         $json = $this->retrieveJSON($url);
+        
         return $json;
     }
 
@@ -47,7 +53,7 @@ class zpool {
         $data = $this->get_wallet_info ();
         $balances = array ();
         $balance = array ();
-        $balance["name"] = "Zpool";
+        $balance["name"] = "Zpool - ".$this->wallet_address;
         $balance["currency"] = "BTC";
         $balance["available"] = $data["balance"];
         $balance["onorder"] = $data["unsold"];
@@ -61,6 +67,7 @@ class zpool {
         if (!$res) {
             $qry = "CREATE TABLE zpool_data ".
                 "(timestamp INT NOT NULL,".
+                "wallet VARCHAR(60) NOT NULL,".
                 "unsold FLOAT NOT NULL,".
                 "balance FLOAT NOT NULL,".
                 "unpaid FLOAT NOT NULL,".
@@ -70,7 +77,8 @@ class zpool {
             $sql->query ($qry);
         }
         $data = $this->get_wallet_info ();
-        $qry = "INSERT INTO zpool_data VALUES (".$now.",".
+        $qry = "INSERT INTO zpool_data VALUES (".$now.",'".
+            $this->wallet_address."',".
             $data["unsold"].",".$data["balance"].",".
             $data["unpaid"].",".$data["paid"].",".
             $data["total"].")";
@@ -80,7 +88,7 @@ class zpool {
 
     public function getMiningData ($sql, $start, $end) {
         $qry = "SELECT timestamp,available,onorder FROM balance WHERE (".
-            "name='Zpool' AND timestamp>=".$end.
+            "name='Zpool - ".$this->wallet_address."' AND timestamp>=".$end.
             " AND timestamp<=".$start.") ORDER BY timestamp ASC";
         $res = $sql->query ($qry);
         $amount = 0.0;        
