@@ -40,9 +40,11 @@ Cryptrack
 <select id="graph_sel" onchange="changeGraph()">
 <option>Last 24 Hours</option>
 <option>Last 7 Days</option>
+<option>Last 30 Days</option>
 </select>
 <div id="value_24" class="ggraph"></div>
 <div id="value_7day" class="ggraph" style="display: none;"></div>
+<div id="value_30day" class="ggraph" style="display: none;"></div>
 <small><small><span id="graph_time"></span></small></small>
 </div>
 </td>
@@ -54,6 +56,7 @@ Cryptrack
 google.charts.load('current', {packages: ['corechart', 'line']});
 google.charts.setOnLoadCallback(draw24value);
 google.charts.setOnLoadCallback(draw7dayvalue);
+google.charts.setOnLoadCallback(draw30dayvalue);
 
 function loadMinerInformation() {
     $.ajax({
@@ -159,20 +162,64 @@ function draw7dayvalue() {
 setInterval(draw7dayvalue, 60000);
 document.getElementById('value_7day').style.display = 'none';
 
+function draw30dayvalue() {
+
+    var options = {
+      title: 'Value Last 30 Days',
+      hAxis: {
+          title: 'Time'
+        },
+      series: {
+          0: {targetAxisIndex: 0},
+          1: {targetAxisIndex: 1}
+      },
+      vAxes: {
+          0: {title: 'Value (USD)'},
+          1: {title: 'Bitcoin Price Index (USD)'}
+      },
+      curveType: 'function',
+    }
+
+    var jsonData = $.ajax({
+      url: "get_30_day_value.php",
+            dataType: "json",
+            async: false
+    }).responseText;
+
+    var data = new google.visualization.DataTable(jsonData);
+
+
+    if (document.getElementById('value_30day').style.display == 'none') return;
+    var chart = new google.visualization.LineChart(document.getElementById('value_30day'));
+    chart.draw(data, options);
+    d = new Date();
+    document.getElementById('graph_time').innerHTML='Last updated on ' + d.toDateString() + ' ' + d.toLocaleTimeString();
+}
+
+setInterval(draw30dayvalue, 60000);
+document.getElementById('value_30day').style.display = 'none';
+
 function changeGraph () {
     var obj=document.getElementById('graph_sel');
     var index=obj.selectedIndex;
     switch (index) {
     case 0:
+        document.getElementById('value_30day').style.display='none';
         document.getElementById('value_7day').style.display='none';
         document.getElementById('value_24').style.display='block';
         draw24value();
         break;
     case 1:
         document.getElementById('value_24').style.display='none';
+        document.getElementById('value_30day').style.display='none';
         document.getElementById('value_7day').style.display='block';
         draw7dayvalue();
         break;
+    case 2:
+        document.getElementById('value_24').style.display='none';
+        document.getElementById('value_7day').style.display='none';
+        document.getElementById('value_30day').style.display='block';
+        draw30dayvalue();
     }
 }
 
