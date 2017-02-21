@@ -113,6 +113,7 @@ while ($acct = $res->fetch_assoc()) {
         $acct["api_key"]."','".$acct["api_secret"]."','".$acct["notes"]."');";
     eval ($cmd);
     $balances = $class->getBalances();
+    
     foreach ($balances as $balance) {
         $total = (double)$balance["available"] + (double)$balance["onorder"];
         /* Skip any empty values */
