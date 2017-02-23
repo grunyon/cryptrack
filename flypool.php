@@ -11,6 +11,7 @@ class flypool {
     public function getBalances() {
         $balances = array ();
         $bal = $this->get_zcash_flypool($this->wallet);
+        if (!is_array($bal)) return $balances;
         if ($bal["unpaid"] > 0) {
             $balance = array ();
             $balance["name"] = "Flypool (Zcash)";
