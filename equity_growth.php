@@ -33,7 +33,8 @@ $earliest_equity = $data["value"];
 $earliest_time = $data["timestamp"];
 /* Get our average daily change */
 $sum = 0.0;
-for ($i = $now, $c = 0; $i>$earliest_time; $i -= (60 * 60 * 24), $c++) {
+$avgtime = mktime(0,0,0);
+for ($i = $avgtime, $c = 0; $i>$earliest_time; $i -= (60 * 60 * 24), $c++) {
     $etime = $i;
     $stime = $etime - (60 * 60 * 24) + 1;
     $qry = "SELECT MIN(timestamp) as start,MAX(timestamp) as end ".
@@ -50,20 +51,12 @@ for ($i = $now, $c = 0; $i>$earliest_time; $i -= (60 * 60 * 24), $c++) {
     $endv = $res->fetch_assoc()["value"];
     $sum+=($endv - $startv);
 }
+//printf ("%4.2f - %d<br>", $sum, $c);
 $avg_daily = $sum/$c;
 ?>
 <table width="100%">
 <tr>
 <td><b>Equity Change: </b></td>
-<td>Average Daily Change: 
-<?php
-if ($avg_daily > 0) {
-    printf ("<span class=\"bpositive\">+$%4.2f</span>", $avg_daily);
-} else {
-    printf ("<span class=\"bnegative\">-$%4.2f</span>", abs($avg_daily));
-}
-?>
-</td>
 <td>24 Hour Change: 
 <?php
 $change = $current_equity - $day_equity;
@@ -104,5 +97,38 @@ if ($change > 0) {
 }
 ?>
 </td>
+</tr>
+<tr>
+<td &nbsp;</td>
+<td>Average Daily Change: 
+<?php
+if ($avg_daily > 0) {
+    printf ("<span class=\"bpositive\">+$%4.2f</span>", $avg_daily);
+} else {
+    printf ("<span class=\"bnegative\">-$%4.2f</span>", abs($avg_daily));
+}
+?>
+</td>
+<?php if ($INVESTMENT>0): ?>
+<td colspan="3">Time to Profit:
+<?php
+/* Get our current balance */
+$qry = "SELECT SUM(value) as value FROM balance ".
+    "GROUP BY timestamp ORDER BY timestamp DESC LIMIT 1";
+$res = $sql->query($qry);
+$total_balance = $res->fetch_assoc()["value"];
+$owed = $INVESTMENT - $total_balance;
+$totaldays = $owed/$avg_daily;
+$days = $totaldays;
+$years = $days/365;
+$days = $days%365;
+$months = $days/30;
+$days = $days%30;
+if ((int)$years > 0) printf ("%d Years ", $years);
+if ((int)$months > 0) printf ("%d Months ", $months);
+printf ("%d Days", $days);
+?>
+</td>
+<?php endif; ?>
 </tr>
 </table>
