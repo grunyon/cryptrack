@@ -18,8 +18,8 @@ $timestart = $timeend - (60 * 60 * 24 * 30);
 $first = true;
 /* Get our minimums for the time frame */
 $res = $sql->query ("SELECT MIN(value) as min FROM (".
-    "SELECT AVG(value) as value FROM balance WHERE (".
-    "timestamp>".$timestart." AND timestamp<".$timeend.") GROUP BY timestamp) t");
+    "SELECT SUM(value) as value FROM balance WHERE (".
+"timestamp>".$timestart." AND timestamp<".$timeend.") GROUP BY timestamp) t");
 $minval = $res->fetch_array()[0];
 $res = $sql->query ("SELECT MIN(last) as min FROM market_data WHERE (".
 "timestamp>".$timestart." AND timestamp<".$timeend." AND exchange='BPI')");
