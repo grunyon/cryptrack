@@ -23,6 +23,8 @@ class cryptopia {
         } elseif ( in_array( $method, $private_set ) ) {
             $url = "https://www.cryptopia.co.nz/api/" . $method;
             $nonce = explode(' ', microtime())[1];
+            $mt = explode(' ', microtime());
+            $nonce = substr($mt[1],-4).substr($mt[0], 2, 6);
             $post_data = json_encode( $req );
             $m = md5( $post_data, true );
             $requestContentBase64String = base64_encode( $m );
@@ -46,8 +48,9 @@ class cryptopia {
 
     public function get_ticker () {
         $result = json_decode($this->apiCall("GetMarkets", array('Market'=>"")), true);
-        $tickers = $result["Data"];
         $ticker = array ();
+        if (!is_array($result)) return $ticker;
+        $tickers = $result["Data"];
         foreach ($tickers as $tick) {
             $ex = explode ('/', $tick["Label"]);
             $key = $ex[1]."_".$ex[0];
@@ -84,13 +87,61 @@ class cryptopia {
         printf ("</table>\r\n");
     }
 
-    public function getOpenOrders () {
-        return $this->query_market ("getopenorders")["result"];
+    public function getMarketOrders ($currency) {
+        $pair = $currency."/BTC";
+
+        /* Need to get the trade pair id */
+        $result = json_decode($this->apiCall("GetTradePairs"), true);
+        $id = 0;
+        foreach ($result["Data"] as $tp) {
+            if (!strcmp($tp["Label"], $pair)) {
+                $id = $tp["Id"];
+                break;
+            }
+        }
+        $result = json_decode($this->apiCall("GetMarketOrders", array('tradePairId'=>$id)), true);
+        return $result["Data"];
     }
 
+    public function getOpenOrders($currency) {
+        $result = json_decode($this->apiCall("GetOpenOrders", array('Market'=>$currency.'/BTC')), true);
+        return $result["Data"];
+    }
+
+    public function cancelTrade($id) {
+        $result = $this->apiCall("CancelTrade", array('Type'=>'Trade', 'OrderId'=>$id));
+    }
+
+    public function sell($currency, $rate, $amount) {
+        $data = array ('Market'=>$currency.'/BTC',
+        'Type'=>'Sell',
+        'Rate'=>$rate,
+        'Amount'=>$amount);
+        $result = $this->apiCall("SubmitTrade", $data);
+    }
+
+
+    public function getMarket ($currency) {
+        $pair = $currency."/BTC";
+        
+        /* Need to get the trade pair id */
+        $result = json_decode($this->apiCall("GetTradePairs"), true);
+        $id = 0;
+        foreach ($result["Data"] as $tp) {
+            if (!strcmp($tp["Label"], $pair)) {
+                $id = $tp["Id"];
+                break;
+            }
+        }
+
+        $result = json_decode($this->apiCall("GetMarket", array('tradePairId' => $id)), true);
+        return ($result["Data"]);
+    }
+    
     public function getBalances () {
         $result = json_decode($this->apiCall("GetBalance", array('Currency'=>"")), true);
         $balances = array ();
+        if (!is_array($result)) return $balances;
         foreach ($result["Data"] as $bal) {
             if ($bal["Total"] > 0) {
                 $balance = array ();
