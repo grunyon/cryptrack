@@ -32,7 +32,6 @@ class flypool {
     }
 
     public function updateMiningData ($sql, $now) {
-        return;
         /* Check to see if we have a table to save our deltas */
         $res = $sql->query ("SELECT * FROM flypool_delta");
         if (!$res) {
@@ -63,11 +62,13 @@ class flypool {
                 printf ("\nNegative delta: (%4.8f,$%4.8f) %4.8f\n",
                         $lastbal, $cur[0]["available"], $delta);
             }
+            /*
             printf ("\n");
             printf ("timestamp: %d\n", $now);
             printf ("last: %4.8f\n", $lastbal);
             printf ("now : %4.8f\n", $cur[0]["available"]);
             printf ("flypool delta: %4.8f\n", $delta);
+            */
             $qry = "INSERT INTO flypool_delta VALUES (".$now.",".$delta.")";
             $sql->query ($qry);
         }
@@ -84,7 +85,6 @@ class flypool {
         $res = $sql->query ("SELECT available FROM balance WHERE ".
             "(name='Flypool (Zcash)' AND timestamp>=".$end.
             " AND timestamp<=".$start.") ORDER BY timestamp ASC");
-        echo $sql->error;
         $data = $res->fetch_assoc();
         $last=$data["available"];
         $total = 0.0;
