@@ -8,6 +8,13 @@ $available_accounts = array (
         "file" => "bitcoinrpc.php"
     ),
     array (
+        "name" => "DashRPC",
+        "description" => "Dash RPC",
+        "type" => "Wallet",
+        "class" => "dashrpc",
+        "file" => "dashrpc.php"
+    ),
+    array (
         "name" => "Coinbase",
         "description" => "Coinbase",
         "type" => "Wallet",
