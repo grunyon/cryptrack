@@ -1,6 +1,13 @@
 <?php
 $available_accounts = array (
     array (
+        "name" => "BitcoinRPC",
+        "description" => "Bitcoin RPC",
+        "type" => "Wallet",
+        "class" => "bitcoinrpc",
+        "file" => "bitcoinrpc.php"
+    ),
+    array (
         "name" => "Coinbase",
         "description" => "Coinbase",
         "type" => "Wallet",
