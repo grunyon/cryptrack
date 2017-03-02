@@ -26,6 +26,7 @@ if (isset($_POST["fromacct"])) {
     printf ("document.location='wallet.php?id=".$_GET["id"]."';\r\n");
     printf ("</script>\r\n");
 }
+$info = $class->getAccounts();
 ?>
 
 <div class="title">
@@ -33,6 +34,54 @@ if (isset($_POST["fromacct"])) {
 </div>
 <br>
 
+    <form method="post" action="wallet.php?id=<?php echo $_GET["id"];?>">
+<div class="rbordered">
+    <table width="100%">
+    <tr>
+    <td><b>Move Funds</b></td>
+    <td>From Account:
+    <select name="fromacct">
+    <?php
+    foreach ($info as $account) {
+        printf ("<option value=\"%s\">%s</option>", $account["account"], $account["account"]);
+    }
+    ?>
+    </select>
+    </td>
+    <td>To Account:
+    <select name="toacct">
+    <?php
+    foreach ($info as $account) {
+        printf ("<option value=\"%s\">%s</option>", $account["account"], $account["account"]);
+    }
+    ?>
+    ?>
+    </select>
+    </td>
+    <td>Amount:
+    <input type="text" name="amount" value="0.00000000"></td>
+    <td align="right">
+    <input type="submit" value="Move Funds">
+    </td>
+    </tr>
+    </table>
+</div>
+</form>
+
+<form method="post" action="wallet.php?id=<?php echo $_GET["id"];?>">
+<div class="rbordered">
+    <table width="100%">
+    <tr>
+    <td><b>Send Funds</b></td>
+    </tr>
+    </table>
+</div>
+</form>
+
+<table width="100%">
+<tr>
+
+<td width="50%" valign="top">
 <div class="rbordered">
 <span class="title">Accounts</span>
 <br>
@@ -43,7 +92,6 @@ if (isset($_POST["fromacct"])) {
     <th>Balance</th>
     </tr>
 <?php
-$info = $class->getAccounts();
 foreach ($info as $account) {
     printf ("<tr>\r\n");
     printf ("<td>%s</td>\r\n", $account["account"]);
@@ -60,52 +108,42 @@ foreach ($info as $account) {
 ?>
 </table>
 </div>
-<br>
-<table width="100%">
-<tr>
-<td width="50%" valign="top">
-<div class="rbordered">
-    <span class="title">Move</span>
-    <form method="post" action="wallet.php?id=<?php echo $_GET["id"];?>">
-    <table width="100%">
-    <tr>
-    <td width="33%">From:
-    <select name="fromacct">
-    <?php
-    foreach ($info as $account) {
-        printf ("<option value=\"%s\">%s</option>", $account["account"], $account["account"]);
-    }
-    ?>
-    </select>
-    </td>
-    <td width="33%">To:
-    <select name="toacct">
-    <?php
-    foreach ($info as $account) {
-        printf ("<option value=\"%s\">%s</option>", $account["account"], $account["account"]);
-    }
-    ?>
-    ?>
-    </select>
-    </td>
-    <td width="33%">Amount:
-    <input type="text" name="amount" value="0.00000000"></td>
-    </tr>
-    </table>
-    <br>
-    <center>
-    <input type="submit" value="Move Funds">
-    </center>
-    </form>
-</div>
 </td>
+
 <td width="50%" valign="top">
     <div class="rbordered">
-    <span class="title">Send</span>
+    <span class="title">Transactions</span>
+    <table class="bordered" width="100%">
+    <tr>
+    <th>Time</th>
+    <th>Address</th>
+    <th>Amount</th>
+    <th>Conf</th>
+    </tr>
+<?php
+$transactions = $class->getTransactions();
+/*
+echo "<pre>";
+print_r ($transactions);
+echo "</pre>";
+*/
+foreach ($transactions as $trans) {
+    printf ("<tr>\r\n");
+    printf ("<td>%s</td>\r\n", strftime("%c", $trans["time"]));
+    printf ("<td>%s</td>\r\n", $trans["address"]);
+    printf ("<td align=\"right\">%4.8f</td>\r\n", $trans["amount"]);
+    printf ("<td align=\"right\">%d</td>\r\n", $trans["confirmations"]);
+    printf ("</tr>\r\n");
+};
+?>
+    </table>
     </div>
 </td>
+    
 </tr>
 </table>
+
+<br>
 
 <?php
 require_once ("footer.php");
