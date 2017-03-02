@@ -113,6 +113,7 @@ foreach ($info as $account) {
 <td width="50%" valign="top">
     <div class="rbordered">
     <span class="title">Transactions</span>
+    <br>
     <table class="bordered" width="100%">
     <tr>
     <th>Time</th>
