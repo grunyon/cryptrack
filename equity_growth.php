@@ -121,7 +121,7 @@ if ($avg_daily > 0) {
 ?>
 </td>
 <?php if ($INVESTMENT>0): ?>
-<td colspan="3">Time to Profit:
+<td colspan="3">Estimated ROI:
 <?php
 /* Get our current balance */
 $qry = "SELECT SUM(value) as value FROM balance ".
