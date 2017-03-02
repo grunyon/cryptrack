@@ -53,7 +53,13 @@ function get_usd_amount ($sql, $currency, $amount, $bpi = 0.0) {
     return $value;
 }
 
-function get_url_from_name ($available_accounts, $name) {
+function get_url_from_name ($available_accounts, $name, $id) {
+    global $sql;
+
+    /* Get our account for this id */
+    $res = $sql->query ("SELECT * FROM accounts WHERE (id=".$id.")");
+    $taccount = $res->fetch_assoc();
+    
     $url = "";
     foreach ($available_accounts as $account) {
         /* Create our class for the account */
@@ -62,7 +68,13 @@ function get_url_from_name ($available_accounts, $name) {
         $cmd = "    \$url = ".$account["class"]."::get_url(\"".$name."\");";
         eval ($cmd);
         if (strcmp($url,"")) return ($url);
+        /* Nothing from the class, so get our account type */
+        if (!strcmp($account["type"],"Wallet")) {
+            $turl = "wallet.php?id=".$id;
+        }
     }
+
+    return $turl;
 }
 
 function create_miner_table ($sql) {
