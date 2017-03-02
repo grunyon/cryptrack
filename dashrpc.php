@@ -58,7 +58,43 @@ class dashrpc {
         return $balances;
     }
 
-    
+    public function move($from, $to, $amount) {
+        $res = $this->query("move", array ($from, $to, $amount));
+    }
+
+    public function getAddresses() {
+        $addresses = array ();
+        $res = $this->query ("listreceivedbyaddress", array (0, "true"));
+        foreach ($res["result"] as $info) {
+            $address = array ();
+            $address["address"] = $info["address"];
+            $address["account"] = $info["account"];
+            if (!strcmp($address["account"],"")) $address["account"] = "default";
+            $address["balance"] = $info["amount"];
+            $addresses[] = $address;
+        }
+        return $addresses;
+    }
+
+    public function getAddressesByAccount($account) {
+        if (!strcmp($account,"default")) $account="";
+        $res = $this->query("getaddressesbyaccount", array($account));
+        return $res["result"];
+    }
+
+    public function getAccounts() {
+        $accounts = array ();
+        $res = $this->query ("listaccounts");
+        foreach (array_keys($res["result"]) as $account) {
+            $acct = array ();
+            if ($account == "default") continue;
+            if ($account == "") $acct["account"] = "default";
+            else $acct["account"] = $account;
+            $acct["balance"] = $res["result"][$account];
+            $accounts[] = $acct;
+        }
+        return $accounts;
+    }        
 
     /* Show our setup table for the setup script */
     public static function show_setup() {
