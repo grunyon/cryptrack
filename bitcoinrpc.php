@@ -96,8 +96,27 @@ class bitcoinrpc {
         }
         return $accounts;
     }
-    
 
+    private static function transCmp ($a, $b) {
+        return ($a["time"] < $b["time"]) ? +1 : -1;
+    }
+
+    public function getTransactions() {
+        /* First we have to get our accounts */
+        $accounts = $this->query ("listaccounts");
+        $transactions = array();
+        /* Loop through our accounts and get the transactions */
+        foreach (array_keys($accounts["result"]) as $acctname) {            
+            $trans = $this->query ("listtransactions", array($acctname));
+            foreach ($trans["result"] as $tran) {
+                if (!strcmp($tran["category"],"move")) continue;
+                $transactions[] = $tran;
+            }
+        }
+        uasort ($transactions, array('bitcoinrpc','transCmp'));
+        return $transactions;
+    }
+    
     /* Show our setup table for the setup script */
     public static function show_setup() {
         printf ("Please fill out the following information to setup a local Bitcoin RPC Connection.");
