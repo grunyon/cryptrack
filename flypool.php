@@ -107,7 +107,7 @@ class flypool {
         $opts = array('http' =>
         array(
             'method' => 'GET',
-            'timeout' => 10
+            'timeout' => 30
         )
         );
         $context = stream_context_create($opts);
