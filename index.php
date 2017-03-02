@@ -85,9 +85,9 @@ function loadGrowth() {
     });
 }
 
-setInterval(loadBalanceInformation, 60000);
-setInterval(loadMinerInformation, 60000);
-setInterval(loadGrowth, 60000);
+setInterval(loadBalanceInformation, 120000);
+setInterval(loadMinerInformation, 120000);
+setInterval(loadGrowth, 120000);
 
 function draw24value() {
 
@@ -123,7 +123,7 @@ function draw24value() {
     document.getElementById('graph_time').innerHTML='Last updated on ' + d.toDateString() + ' ' + d.toLocaleTimeString();
 }
 
-setInterval(draw24value, 60000);
+setInterval(draw24value, 120000);
 
 function draw7dayvalue() {
 
@@ -159,7 +159,7 @@ function draw7dayvalue() {
     document.getElementById('graph_time').innerHTML='Last updated on ' + d.toDateString() + ' ' + d.toLocaleTimeString();
 }
 
-setInterval(draw7dayvalue, 60000);
+setInterval(draw7dayvalue, 120000);
 document.getElementById('value_7day').style.display = 'none';
 
 function draw30dayvalue() {
@@ -196,7 +196,7 @@ function draw30dayvalue() {
     document.getElementById('graph_time').innerHTML='Last updated on ' + d.toDateString() + ' ' + d.toLocaleTimeString();
 }
 
-setInterval(draw30dayvalue, 60000);
+setInterval(draw30dayvalue, 120000);
 document.getElementById('value_30day').style.display = 'none';
 
 function changeGraph () {
