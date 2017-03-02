@@ -38,7 +38,7 @@ $res = $sql->query("SELECT * FROM balance ".
 $total_usd = 0;
 while ($balance = $res->fetch_assoc()) {
         printf ("<tr>\r\n");
-        $url = get_url_from_name ($available_accounts, $balance["name"]);
+        $url = get_url_from_name ($available_accounts, $balance["name"], $balance["account_id"]);
         if (strcmp($url,"")) {
             printf ("<td><a href=\"%s\" target=\"_blank\">%s</a></td>\r\n", $url, $balance["name"]);
         } else {
