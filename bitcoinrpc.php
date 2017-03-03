@@ -107,7 +107,7 @@ class bitcoinrpc {
         $transactions = array();
         /* Loop through our accounts and get the transactions */
         foreach (array_keys($accounts["result"]) as $acctname) {            
-            $trans = $this->query ("listtransactions", array($acctname));
+            $trans = $this->query ("listtransactions", array($acctname, 100));
             foreach ($trans["result"] as $tran) {
                 if (!strcmp($tran["category"],"move")) continue;
                 $transactions[] = $tran;
