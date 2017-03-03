@@ -104,10 +104,13 @@ class zpool {
             $last = $data;
         }
         /* Need to check to see if there was a payout during this time period */
-        $res = $sql->query ("SELECT MIN(paid) as min,MAX(paid) as MAX ".
+        $res = $sql->query ("SELECT MIN(paid) as min,MAX(paid) as max ".
         "FROM zpool_data WHERE (timestamp>=".$end.
         " AND timestamp<=".$start.")");
         $data = $res->fetch_array ();
+        $payout = $data["max"] - $data["min"];
+        echo $payout;
+        if ($payout > 0.0) $amount += $payout;
 
         return array ("BTC" => $amount);
         
