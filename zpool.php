@@ -21,7 +21,6 @@ class zpool {
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
         $res = curl_exec($ch);
         if ($res == false) throw new Exception('Curl error: '.curl_error($ch));
-        echo $res;
     }
 
     protected function retrieveJSON($URL) {
@@ -109,7 +108,6 @@ class zpool {
         " AND timestamp<=".$start.")");
         $data = $res->fetch_array ();
         $payout = $data["max"] - $data["min"];
-        echo $payout;
         if ($payout > 0.0) $amount += $payout;
 
         return array ("BTC" => $amount);
