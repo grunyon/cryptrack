@@ -135,6 +135,7 @@ if ($res) {
     printf ("[%s] Getting miner power usage...", strftime("%c"));
 
     while ($miner = $res->fetch_assoc()) {
+        $output = array();
         $cmd = "ssh ".$miner["account"]."@".$miner["hostname"]." nvidia-smi -q";
         exec ($cmd, $output);
         $power = 0.0;
