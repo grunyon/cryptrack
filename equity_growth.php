@@ -52,7 +52,8 @@ for ($i = $avgtime, $c = 0; $i>$earliest_time; $i -= (60 * 60 * 24), $c++) {
     $sum+=($endv - $startv);
 }
 //printf ("%4.2f - %d<br>", $sum, $c);
-$avg_daily = $sum/$c;
+if ($c > 0) $avg_daily = $sum/$c;
+else $avg_daily = 0;
 /* Get our average daily power cost */
 /* Get our 24 hour average power usage and cost add it to the array */
 $res = $sql->query ("SELECT miners.name AS name, MAX(power_cost) as power_cost, ".
@@ -61,8 +62,10 @@ $res = $sql->query ("SELECT miners.name AS name, MAX(power_cost) as power_cost, 
     "(power_draw.miner_id=miners.id AND timestamp>".($now - 24 * 60 * 60).
     ") GROUP BY miners.name");
 $total_cost = 0.0;
-while ($power = $res->fetch_assoc()) {
-    $total_cost += $power["avg_power"] * 24 / 1000.0 * $power["power_cost"];
+if ($total_cost > 0.0) {
+    while ($power = $res->fetch_assoc()) {
+        $total_cost += $power["avg_power"] * 24 / 1000.0 * $power["power_cost"];
+    }
 }
 ?>
 <table width="100%">
