@@ -20,21 +20,23 @@ $res = $sql->query ("SELECT timestamp FROM power_draw ORDER BY timestamp DESC LI
 if ($res->num_rows > 0) {
     $lasttime = $res->fetch_assoc()["timestamp"];
 } else {
-    if ($lasttime) {
-        /* We have some power data, so we can add it to the table */
-        printf ("<tr>\r\n");
-        printf ("<th class=\"poolhead\" colspan=\"%d\">Power Usage</td>\r\n", $numcols);
-        printf ("</tr>\r\n");
-        /* Print our headers */
-        printf ("<tr>\r\n");
-        printf ("<th colspan=\"%d\">Miner</th>\r\n", $numcols - 3);
-        printf ("<th>Current Usage</th>\r\n");
-        printf ("<th>Avg Usage (24hr)</th>\r\n");
-        printf ("<th>Cost/Day</th>\r\n");
-        printf ("</tr>\r\n");
-        $total_cost = 0.0;
-        $power = array ();
-        /* Get our last update data and add it to an array */
+    $lasttime = 0;
+}
+if ($lasttime) {
+    /* We have some power data, so we can add it to the table */
+    printf ("<tr>\r\n");
+    printf ("<th class=\"poolhead\" colspan=\"%d\">Power Usage</td>\r\n", $numcols);
+    printf ("</tr>\r\n");
+    /* Print our headers */
+    printf ("<tr>\r\n");
+    printf ("<th colspan=\"%d\">Miner</th>\r\n", $numcols - 3);
+    printf ("<th>Current Usage</th>\r\n");
+    printf ("<th>Avg Usage (24hr)</th>\r\n");
+    printf ("<th>Cost/Day</th>\r\n");
+    printf ("</tr>\r\n");
+    $total_cost = 0.0;
+    $power = array ();
+    /* Get our last update data and add it to an array */
         $res = $sql->query ("SELECT * FROM power_draw,miners WHERE ".
         "(power_draw.miner_id=miners.id AND timestamp=".$lasttime.")");
         while ($data = $res->fetch_assoc()) {
@@ -58,13 +60,12 @@ if ($res->num_rows > 0) {
             printf ("<tr>\r\n");
             printf ("<td colspan=\"%d\">%s</td>\r\n", $numcols - 3, $key);
             printf ("<td align=\"right\">%4.2f Watts</td>", $power[$key]["last"]);
-        printf ("<td align=\"right\">%4.2f Watts</td>", $power[$key]["avg"]);
-        $cost_per_day = $power[$key]["avg"] * $hours / 1000. * $power[$key]["cost"];
-        printf ("<td align=\"right\"><span class=\"negative\">-$%4.2f</span></td>", $cost_per_day);
-        printf ("</tr>\r\n");
-        $total_cost += $cost_per_day;
+            printf ("<td align=\"right\">%4.2f Watts</td>", $power[$key]["avg"]);
+            $cost_per_day = $power[$key]["avg"] * $hours / 1000. * $power[$key]["cost"];
+            printf ("<td align=\"right\"><span class=\"negative\">-$%4.2f</span></td>", $cost_per_day);
+            printf ("</tr>\r\n");
+            $total_cost += $cost_per_day;
         }
-    }
 }
 printf ("<tr>\r\n");
 printf ("<td colspan=\"%d\"><b>Total Cost Per Day</b></td>\r\n", $numcols - 1);
