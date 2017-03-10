@@ -62,6 +62,13 @@ $available_accounts = array (
         "type" => "Pool",
         "class" => "mph",
         "file" => "mph.php"
+    ),
+    array (
+        "name" => "Suprnova",
+        "description" => "Suprnova",
+        "type" => "Pool",
+        "class" => "suprnova",
+        "file" => "suprnova.php"
     )
 );        
 ?>
