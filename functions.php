@@ -37,11 +37,12 @@ function get_usd_amount ($sql, $currency, $amount, $bpi = 0.0) {
         $value = $amount * $bpi;
     } else {
         /* We need to grab market amount for this currency in BTC */        
-        $res = $sql->query ("SELECT last FROM market_data WHERE (".
+        $res = $sql->query ("SELECT lowest_ask,highest_bid,last FROM market_data WHERE (".
                             "market_name='BTC_".$currency."') ORDER BY ".
                             "timestamp DESC LIMIT 1");
         if ($res->num_rows > 0) {
-            $btc_val = $res->fetch_assoc()["last"];
+            $data = $res->fetch_assoc();
+            $btc_val = ($data["lowest_ask"] + $data["highest_bid"])/2;
             $value = $amount * $btc_val * $bpi;
         } else {
             /* Nothing from poloniex, so try bitrex public for market */
