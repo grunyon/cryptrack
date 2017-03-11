@@ -5,7 +5,7 @@ class suprnova {
     protected $api_key;
     protected $user_id;
     /* The URLs we are currently supporting */
-    private $urls = array ("DASH"=> "dash");
+    private $urls = array ("DASH" => "dash");
 
     public function __construct($api_key, $user_id, $note = '') {
         $this->api_key = $api_key;
@@ -66,7 +66,7 @@ class suprnova {
             $qry = $this->query($this->urls[$key], "getusertransactions");
             $transactions = $qry["getusertransactions"]["data"]["transactions"];
             foreach ($transactions as $transaction) {
-                $timestamp = strtotime($transaction["timestamp"]." UTC");
+                $timestamp = strtotime($transaction["timestamp"]." UTC") - (60 * 60);
                 $qry = "INSERT INTO suprnova_transactions VALUES (".
                     $transaction["id"].",".
                     $timestamp.",'".
@@ -81,8 +81,7 @@ class suprnova {
     public function getMiningData ($sql, $start, $end) {
         $qry = "SELECT currency,type,amount FROM suprnova_transactions ".
             "WHERE (timestamp>=".$end." AND timestamp<=".$start.")";
-        $res = $sql->query ($qry);
-        if (!$res) return;
+        $res = $sql->query ($qry);        
         $retval = array ();
         while ($data = $res->fetch_assoc()) {
             switch ($data["type"]) {
