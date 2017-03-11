@@ -50,7 +50,7 @@ while ($balance = $res->fetch_assoc()) {
         $total = (double)$balance["available"] + (double)$balance["onorder"];
         printf ("<td align=\"right\">%4.8f</td>\r\n", $total);
         printf ("<td align=\"right\">$%4.2f</td>\r\n", $balance["value"]);
-        printf ("<td>");
+        printf ("<td onMouseOver=\"showmarketinfo('testing');\" onMouseOut=\"hidemarketinfo('testing');\">");
         /* Check to see if the value for this currency has gone up or down in the last
            24 hours */
         $avg_time = (60 * 15); // 15 Minutes for the average time
@@ -93,10 +93,10 @@ while ($balance = $res->fetch_assoc()) {
                     "ORDER BY timestamp DESC LIMIT 1";
                 $fres = $sql->query ($qry);
                 $first = $fres->fetch_array();
-                $qry = "SELECT last FROM market_data WHERE ".
+                $qry = "SELECT AVG(last) as last FROM market_data WHERE ".
                     "(exchange='".$acct["type"]."' AND timestamp>=".$day.
                     " AND market_name='BTC_".$balance["currency"]."') ".
-                    "ORDER BY timestamp ASC LIMIT 1";
+                    " GROUP BY timestamp ORDER BY timestamp ASC LIMIT 1";
                 $lres = $sql->query ($qry);
                 $last = $lres->fetch_array();
                 $mdiff = $first["last"] - $last["last"];
@@ -143,9 +143,11 @@ while ($balance = $res->fetch_assoc()) {
         $total_usd += $balance["value"];
 }
 printf ("<tr>\r\n");
-printf ("<th class=\"poolhead\" colspan=\"5\">Total</td>\r\n");
+printf ("<th class=\"poolhead\" colspan=\"5\">Total</th>\r\n");
 printf ("<td align=\"right\"><b><big>$%4.2f</big></b></td>\r\n", $total_usd);
 printf ("</tr>\r\n");
 ?>
 </table>
+<div id="testing" style="display: none; position: absolute;">
+</div>
 <?php printf ("<small><small>Last Updated on %s</small></small>\r\n", strftime("%c"));?>
