@@ -135,15 +135,19 @@ if ($res) {
     printf ("[%s] Getting miner power usage...", strftime("%c"));
 
     while ($miner = $res->fetch_assoc()) {
-        $output = array();
-        $cmd = "ssh ".$miner["account"]."@".$miner["hostname"]." nvidia-smi -q";
-        exec ($cmd, $output);
-        $power = 0.0;
-        foreach ($output as $line) {
-            if (strstr($line, "Power Draw")) {
-                $ex = explode(" ",explode(":", $line)[1]);
-                $power += $ex[1];
+        if (strcmp($miner["account"], "static")) {
+            $output = array();
+            $cmd = "ssh ".$miner["account"]."@".$miner["hostname"]." nvidia-smi -q";
+            exec ($cmd, $output);
+            $power = 0.0;
+            foreach ($output as $line) {
+                if (strstr($line, "Power Draw")) {
+                    $ex = explode(" ",explode(":", $line)[1]);
+                    $power += $ex[1];
+                }
             }
+        } else {
+            $power = floatval($miner["hostname"]);
         }
         $qry =  "INSERT INTO power_draw VALUES (".
             $miner["id"].",".
