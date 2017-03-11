@@ -58,6 +58,28 @@ google.charts.setOnLoadCallback(draw24value);
 google.charts.setOnLoadCallback(draw7dayvalue);
 google.charts.setOnLoadCallback(draw30dayvalue);
 
+var mouseX = 0;
+var mouseY = 0;
+
+function getMouseXY (e) {
+    mouseX = e.pageX;
+    mouseY = e.pageY;
+}
+
+document.onMouseMove = getMouseXY;
+
+function showmarketinfo(id) {
+    var obj = document.getElementById(id);
+    obj.position = "absolute";
+    obj.style.display = "block";
+    obj.style.top = mouseY;
+    obj.style.left = mouseX;
+}
+
+function hidemarketinfo(id) { 
+    document.getElementById(id).style = "display: none";   
+}
+
 function loadMinerInformation() {
     $.ajax({
       url: "minertable.php",
