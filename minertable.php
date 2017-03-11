@@ -41,8 +41,9 @@ if ($lasttime) {
         $res = $sql->query ("SELECT * FROM power_draw,miners WHERE ".
         "(power_draw.miner_id=miners.id AND timestamp=".$lasttime.")");
         while ($data = $res->fetch_assoc()) {
-            $power[$data["name"]]["last"] = $data["power_usage"] + $power_add;
+            $power[$data["name"]]["last"] = $data["power_usage"];
             $power[$data["name"]]["cost"] = $data["power_cost"];
+            $power[$data["name"]]["account"] = $data["account"];
         }
         /* Get our 24 hour average power usage and cost add it to the array */
         $res = $sql->query ("SELECT miners.name AS name,MIN(timestamp) as min, ".
@@ -51,13 +52,18 @@ if ($lasttime) {
         "(power_draw.miner_id=miners.id AND timestamp>".($now - 24 * 60 * 60).
         ") GROUP BY miners.name");
         while ($data = $res->fetch_assoc()) {
-            $power[$data["name"]]["avg"] = $data["avg_power"] + $power_add;
-            $power[$data["name"]]["min"] = $data["min"] + $power_add;
-            $power[$data["name"]]["max"] = $data["max"] + $power_add;        
+            $power[$data["name"]]["avg"] = $data["avg_power"];
+            $power[$data["name"]]["min"] = $data["min"];
+            $power[$data["name"]]["max"] = $data["max"];        
         }
         foreach (array_keys ($power) as $key) {
             $timediff = ($power[$key]["max"] - $power[$key]["min"]);
             $hours = $timediff / 60.0 / 60.0;
+            /* For non-static miners add a base power */
+            if (strcmp($power[$key]["account"], "static")) {
+                $power[$key]["last"] += $power_add;
+                $power[$key]["avg"] += $power_add;
+            }
             printf ("<tr>\r\n");
             printf ("<td colspan=\"%d\">%s</td>\r\n", $numcols - 3, $key);
             printf ("<td align=\"right\">%4.2f Watts</td>", $power[$key]["last"]);
