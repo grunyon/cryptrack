@@ -37,10 +37,11 @@ if ($lasttime) {
     $total_cost = 0.0;
     $power = array ();
     /* Get our last update data and add it to an array */
+    $power_add = 60.0;
         $res = $sql->query ("SELECT * FROM power_draw,miners WHERE ".
         "(power_draw.miner_id=miners.id AND timestamp=".$lasttime.")");
         while ($data = $res->fetch_assoc()) {
-            $power[$data["name"]]["last"] = $data["power_usage"];
+            $power[$data["name"]]["last"] = $data["power_usage"] + $power_add;
             $power[$data["name"]]["cost"] = $data["power_cost"];
         }
         /* Get our 24 hour average power usage and cost add it to the array */
@@ -50,9 +51,9 @@ if ($lasttime) {
         "(power_draw.miner_id=miners.id AND timestamp>".($now - 24 * 60 * 60).
         ") GROUP BY miners.name");
         while ($data = $res->fetch_assoc()) {
-            $power[$data["name"]]["avg"] = $data["avg_power"];
-            $power[$data["name"]]["min"] = $data["min"];
-            $power[$data["name"]]["max"] = $data["max"];        
+            $power[$data["name"]]["avg"] = $data["avg_power"] + $power_add;
+            $power[$data["name"]]["min"] = $data["min"] + $power_add;
+            $power[$data["name"]]["max"] = $data["max"] + $power_add;        
         }
         foreach (array_keys ($power) as $key) {
             $timediff = ($power[$key]["max"] - $power[$key]["min"]);
