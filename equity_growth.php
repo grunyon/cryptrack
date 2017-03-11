@@ -134,13 +134,13 @@ $total_balance = $res->fetch_assoc()["value"];
 $owed = $INVESTMENT - $total_balance;
 $totaldays = $owed/($avg_daily - $total_cost); 
 $days = $totaldays;
-$years = $days/365;
+$years = (int)($days/365);
 $days = $days%365;
-$months = $days/30;
+$months = (int)($days/30);
 $days = $days%30;
-if ((int)$years > 0) printf ("%d Years ", $years);
-if ((int)$months > 0) printf ("%d Months ", $months);
-printf ("%d Days", $days);
+if ((int)$years > 0) printf ("%d Year%s, ", $years, $years>1 ? "s" : "");
+if ((int)$months > 0) printf ("%d Month%s, ", $months, $months>1 ? "s" : "");
+printf ("%d Day%s", $days, $days>1 ? "s" : "");
 ?>
 </td>
 <?php endif; ?>
