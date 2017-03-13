@@ -5,7 +5,7 @@ class suprnova {
     protected $api_key;
     protected $user_id;
     /* The URLs we are currently supporting */
-    private $urls = array ("DASH" => "dash");
+    private $urls = array ("DASH" => "dash","ZEC" => "zec");
 
     public function __construct($api_key, $user_id, $note = '') {
         $this->api_key = $api_key;
@@ -19,7 +19,7 @@ class suprnova {
         $opts = array('http' =>
             array(
                 'method' => 'GET',
-                'timeout' => 10,
+                'timeout' => 20,
             )
         );
         $context = stream_context_create($opts);
