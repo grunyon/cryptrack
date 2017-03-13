@@ -33,7 +33,7 @@ $earliest_equity = $data["value"];
 $earliest_time = $data["timestamp"];
 /* Get our average daily change */
 $sum = 0.0;
-$avgtime = mktime(0,0,0);
+$avgtime = mktime(localtime(time(),true)["tm_hour"],0,0);
 for ($i = $avgtime, $c = 0; $i>$earliest_time; $i -= (60 * 60 * 24), $c++) {
     $etime = $i;
     $stime = $etime - (60 * 60 * 24) + 1;
@@ -138,9 +138,13 @@ $years = (int)($days/365);
 $days = $days%365;
 $months = (int)($days/30);
 $days = $days%30;
-if ((int)$years > 0) printf ("%d Year%s, ", $years, $years>1 ? "s" : "");
-if ((int)$months > 0) printf ("%d Month%s, ", $months, $months>1 ? "s" : "");
-printf ("%d Day%s", $days, $days>1 ? "s" : "");
+if ((int)$years > 0)
+    printf ("%d Year%s%s ", $years, $years>1 ? "s" : "",
+            $months >0 ? "," : "");
+if ((int)$months > 0)
+    printf ("%d Month%s%s ", $months,
+            $months>1 ? "s" : "", $days > 0 ? "," : "");
+if ((int)$days > 0) printf ("%d Day%s", $days, $days>1 ? "s" : "");
 ?>
 </td>
 <?php endif; ?>
